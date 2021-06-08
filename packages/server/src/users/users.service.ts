@@ -19,25 +19,24 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDto> {
-    try {
-      const hashedPassword = await bcrypt.hash(
-        createUserDto.password,
-        parseInt(this.configService.get('SALTROUND')),
-      );
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      parseInt(this.configService.get('SALTROUND')),
+    );
 
-      createUserDto.password = hashedPassword;
-      const createdUser = new this.userModel(createUserDto);
-      return createdUser.save();
-    } catch (error) {
-      throw error;
-    }
+    createUserDto.password = hashedPassword;
+    const createdUser = new this.userModel(createUserDto);
+    return createdUser.save();
   }
 
   async findAll(): Promise<UserDto[]> {
-    return await this.userModel.find();
+    return this.userModel.find();
   }
 
-  async getAuthenticatedUser(email: string, password: string): Promise<UserDto> {
+  async getAuthenticatedUser(
+    email: string,
+    password: string,
+  ): Promise<UserDto> {
     try {
       const user = await this.findByEmail(email);
       await this.verifyPassword(password, user.password);
