@@ -18,10 +18,10 @@ export class User {
   leavesAllowed: number;
 
   @Prop({ default: true })
-  defaultPassword: number;
+  defaultPassword: boolean;
 
   @Prop({ default: true })
-  isActive: number;
+  isActive: boolean;
 
   @Prop({ default: 'user' })
   roles: [string];

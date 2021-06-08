@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, UserDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 
@@ -18,7 +18,7 @@ export class UsersService {
     private configService: ConfigService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserDto> {
     try {
       const hashedPassword = await bcrypt.hash(
         createUserDto.password,
@@ -29,21 +29,18 @@ export class UsersService {
       const createdUser = new this.userModel(createUserDto);
       return createdUser.save();
     } catch (error) {
-        console.log(typeof error)
-        console.log(Object.keys(error))
       throw error;
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find();
+  async findAll(): Promise<UserDto[]> {
+    return await this.userModel.find();
   }
 
-  async getAuthenticatedUser(email: string, password: string) {
+  async getAuthenticatedUser(email: string, password: string): Promise<UserDto> {
     try {
       const user = await this.findByEmail(email);
       await this.verifyPassword(password, user.password);
-      user.password = undefined;
       return user;
     } catch (error) {
       throw error || new NotFoundException();

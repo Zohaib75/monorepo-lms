@@ -13,6 +13,6 @@ export class AuthController {
   @Get('/logout')
   logout(@Request() req, @Res() res: Response) {
     req.logout();
-    res.send({message: 'success'});
+    res.send({ message: 'success' });
   }
 }
