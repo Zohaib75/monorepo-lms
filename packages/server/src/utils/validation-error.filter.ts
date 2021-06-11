@@ -3,7 +3,7 @@ import { MongoError } from 'mongodb';
 
 @Catch(MongoError)
 export class ValidationErrorFilter implements ExceptionFilter {
-  catch(exception: MongoError, host: ArgumentsHost): any {
+  catch(exception: MongoError, host: ArgumentsHost): unknown {
     const ctx = host.switchToHttp(),
       response = ctx.getResponse();
 
